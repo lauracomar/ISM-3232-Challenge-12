@@ -10,16 +10,16 @@ let drawing = false; // check if canva is being used
 let startX, startY; // variables to store coordinates
 
 // mouse down - start drawing
-canvas.addEventListener('mouse', (e) => {
+canvas.addEventListener('mousedown', (e) => {
     drawing = true;
     startX = e.offsetX; // get X coordinate
     startY = e.offsetY; // get Y coordinate
 });
 
 // move mouse - draw shapes
-canvas.addEventListener('movemouse', (e) => {
+canvas.addEventListener('mousemove', (e) => {
     if (!drawing) return; // if statement to leave function if not drawing
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
+    context.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
     drawShape(e.offsetX, e.offsetY); // call drawShape to draw selected shape
 });
 
@@ -32,3 +32,21 @@ canvas.addEventListener('mouseup', () => {
 canvas.addEventListener('mouseout', () => {
     drawing = false;
 });
+
+// Task 3: Implement Shape Drawing Logic
+function drawShape(X, Y) {
+    const shape = document.querySelector('input[name="shape"]: checked').value; //get selected shape
+    context.beginPath();// new path 
+    context.strokeStyle = colorPicker.value; // set stroke to color chosen
+
+    if (shape === 'line') {
+        context.moveTo(startX, startY); //move to starting point
+        context.lineTo(X, Y); // draw line
+    } else if (shape === 'rectangle') {
+        context.rect(startX, startY, X - startX, Y - startY); // draw rectangle
+    } else if (shape === 'circle') {
+        const radius = Math.sqrt((X - startX) ** 2); // calculate radius
+        context.arc(startX, startY, radius, 0, Math.PI * 2);//draw circle
+    }
+    context.stroke();//stroke to draw
+}
